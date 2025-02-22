@@ -17,19 +17,25 @@ const home = async (req, res) =>{
 //*-----------------------------
 const register = async (req, res) => {
     try{
-        const {username, email, phone, password} = req.body;
+        const {username, email, phone, password, city} = req.body;
         const userExist = await User.findOne({email: email});
         if(userExist){
             return res.status(400).json({msg: "email already exists"});
         }
-        await User.create({
+        const userCreated = await User.create({
             username,
             email,
             phone,
             password,
+            city,
         });
-        console.log(req.body);
-        res.status(200).send({message: req.body});
+        // console.log(userCreated);
+        res.status(201).send({
+            // message: userCreated,
+            message: "Registration Completed",
+            token: await userCreated.generateToken(),//this is cookie may store krne ka data
+            userId: userCreated._id.toString(),
+        });
     }
     catch(error){
         res.status(500).send({msg: "internal server error"});
