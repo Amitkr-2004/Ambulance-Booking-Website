@@ -1,4 +1,5 @@
 const User = require("../models/user-model");
+const bcrypt = require("bcrypt");
 
 //*-----------------------------
 // Home Logic
@@ -38,7 +39,8 @@ const register = async (req, res) => {
         });
     }
     catch(error){
-        res.status(500).send({msg: "internal server error"});
+        // res.status(500).send({msg: "internal server error"});
+        next(error);
     }
 }
 
@@ -47,11 +49,32 @@ const register = async (req, res) => {
 //*-----------------------------
 const login = async (req, res) =>{
     try{
-        res.status(200).send("hello from login page");
+        // res.status(200).send("hello from login page");
+        const {email, password} = req.body;
+        const userExists = await User.findOne({email});
+        if(!userExists){
+            res.status(400).send("Invalid Credientials");
+        }
+        
+        // const user = await bcrypt.compare(password, userExists.password);
+        const user = await userExists.comparePassword(password);   //* true/false
+        // console.log(user);
+        console.log("hi1");
+        if(user){
+            res.status(200).send({
+                message: "Login Successful",
+                token: await userExists.generateToken(),
+                userId: userExists._id.toString(),
+            });
+        }
+        else{
+            res.status(401).send({msg: "Invalid email or Password"});
+        }
     }
     catch{
-        res.status(400).send("hello form login page");
+        res.status(500).send("internal Server Error");
     }
 }
+
 
 module.exports = { home, register, login };
