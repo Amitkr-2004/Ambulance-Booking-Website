@@ -141,6 +141,20 @@ export const DriverSignup = () =>{
                                     />
                                 </div>
 
+                                <div>
+                                    <label htmlFor="password">Vehicle No.</label>
+                                    <input
+                                        
+                                        name="vehicle number"
+                                        placeholder="enter your vehicle No."
+                                        id="password" 
+                                        required
+                                        autoComplete="off" 
+                                        value={user.vehicle_No}
+                                        onChange={handleInput}   
+                                    />
+                                </div>
+
 
                                 <br />
 
