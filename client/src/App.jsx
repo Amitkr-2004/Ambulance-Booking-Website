@@ -3,8 +3,10 @@ import {Home} from "./pages/Home"
 import {About} from "./pages/About"
 import {Contact} from "./pages/Contact"
 import {Service} from "./pages/Service";
-import {Register} from "./pages/Register_1";
-import {Login} from "./pages/Login";
+import {Register} from "./pages/Register";
+import {Userlogin} from "./pages/user_login";
+import {Driverlogin} from "./pages/driver_login";
+
 import {Navbar} from "./components/Navbar"
 import { Error } from "./pages/Error";
 import { Footer } from "./components/Footer/Footer";
@@ -24,13 +26,15 @@ const App = () => {
         <Route path="/" element={<Home />}/>
         <Route path="/about" element={<About />}/>
         <Route path="/contact" element={<Contact />}/>
-        <Route path="/Service" element={<Service />}/>
-        <Route path="/Register" element={<Register />}/>
-        <Route path="/login" element={<Login />}/>
+        <Route path="/service" element={<Service />}/>
+        <Route path="/register" element={<Register />}/>
+        <Route path="/login/userlogin" element={<Userlogin />}/>
+        <Route path="/login/driverlogin" element={<Driverlogin />}/>
+
         <Route path="/logout" element={<Logout />}/>
         <Route path="*" element={<Error />}/>
-        <Route path="/rider-signup" element={<RiderSignup />} />
-        <Route path="/driver-signup" element={<DriverSignup />} />
+        <Route path="/register/rider-signup" element={<RiderSignup />} />
+        <Route path="/register/driver-signup" element={<DriverSignup />} />
         {/* making a nested loop */}
         <Route path="/admin" element={<AdminLayout />}>
           <Route path="users" element={<AdminUsers />} /> {/**for nested loop>> admin/users */}

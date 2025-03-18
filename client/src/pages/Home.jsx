@@ -36,12 +36,8 @@ export const Home = () => {
                       <div className="bg-green-500 rounded-full w-5 h-5 "></div>
                       <div className="flex flex-row justify-between w-full  items-center bg-gray-200 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500  ">
                         <LocationAutocomplete className="w-full h-20  bg-gray-200  rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500" onSelect={handleLocationSelect} />
-                        {/* <input
-                          type="text"
-                          placeholder="Enter pickup location"
-                          className="w-full h-20  bg-gray-200  rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
-                        /> */}
-                        <img src="/src/assets/send.svg" className="h-10 w-10 pr-5 " alt="send svg" />
+    
+                    <img src="/src/assets/send.svg" className="h-10 w-10 pr-5 " alt="send svg" />
                       </div>
                      
                     </div>
