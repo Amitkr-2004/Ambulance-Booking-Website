@@ -137,8 +137,8 @@ const driverSignupSchema = z.object({
     vehicleNo: z
         .string({required_error:"Vehicle Number is required"})
         .trim()
-        .min(3, {message:"Vehicle Number must be atleast of 9 chars. "})
-        .max(30,{message:"Vehicle Number must not have more than 12 chars."}),
+        .min(9, {message:"Vehicle Number must be atleast of 9 chars. "})
+        .max(12,{message:"Vehicle Number must not have more than 12 chars."}),
     
 })
 
