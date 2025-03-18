@@ -2,52 +2,52 @@ import { useState } from "react"
 import { useNavigate } from "react-router-dom"
 import { useAuth } from "../store/auth"; // for the context api means not need to pass the props in every components--> const 
 import { toast } from 'react-toastify';
-
+import { NavLink } from "react-router-dom";
 // const URL = "http://localhost:5000/api/auth/login"; //!backend login page url
 
-export const Login = () =>{
-    const[user, setUser]= useState({
+export const Driverlogin = () => {
+    const [driver, setDriver] = useState({
         email: "",
         password: "",
     })
 
     const navigate = useNavigate();
-    const {storeTokenInLS, API} = useAuth();//making a object to use the context api//also done destructuring because we are not exporting default
+    const { storeTokenInLS, API } = useAuth();//making a object to use the context api//also done destructuring because we are not exporting default
 
-    const handleInput = (e)=>{
+    const handleInput = (e) => {
         let name = e.target.name;
         let value = e.target.value;
 
-        setUser(({
-            ...user,
-            [name]:value,
+        setDriver(({
+            ...driver,
+            [name]: value,
         }))
     }
 
-    const handleSubmit = async (e) =>{
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        console.log(user);
+        console.log(driver);
 
         try {
-            const response = await fetch(`${API}/api/auth/login`,{
+            const response = await fetch(`${API}/api/auth/login`, {
                 method: "POST",
-                headers:{
+                headers: {
                     'Content-Type': "application/json",
                 },
-                body: JSON.stringify(user),
+                body: JSON.stringify(driver),
             });
-            const res_data = await response.json();//!  it consists the data which we have sent in res form the backend "login controller"--> message, token, userId
-            if(response.ok){
+            const res_data = await response.json();//!  it consists the data which we have sent in res form the backend "login controller"--> message, token, DriverId
+            if (response.ok) {
                 // alert("Login Successful");//--->now we are using toastify
                 //storing the token in local storage
                 storeTokenInLS(res_data.token);
                 // localStorage.setItem("token", res_data.token);//edit--> we used function in store folder>>concept of CONTEXT API
 
-                setUser({email: "",password: "",});// resetting the data filled in the field
+                setDriver({ email: "", password: "", });// resetting the data filled in the field
                 toast.success("Login successful");
                 navigate("/");
-            }else{
-                toast.error(res_data.extraDetails? res_data.extraDetails: res_data.message );
+            } else {
+                toast.error(res_data.extraDetails ? res_data.extraDetails : res_data.message);
                 // alert("Invalid Credential");
             }
         } catch (error) {
@@ -63,13 +63,13 @@ export const Login = () =>{
                     <div className="container grid grid-two-cols">
                         <div className="registration-image">
                             <img
-                                src="src\assets\docter.svg"
-                                alt="let's fill the login form" 
-                                width="500" height= "500"
+                                src="/src/assets/docter2.svg"
+                                alt="let's fill the login form"
+                                width="500" height="500"
                             />
                         </div>
                         <div className="registration-form">
-                            <h1 className="main-heading mb3"></h1>
+                            <h1 className="main-heading mb3">Driver login</h1>
                             <br />
                             <form onSubmit={handleSubmit}>
 
@@ -79,10 +79,10 @@ export const Login = () =>{
                                         type="email"
                                         name="email"
                                         placeholder="enter your email"
-                                        id="email" 
+                                        id="email"
                                         required
                                         autoComplete="off"
-                                        value={user.email}
+                                        value={driver.email}
                                         onChange={handleInput}
                                     />
                                 </div>
@@ -93,11 +93,11 @@ export const Login = () =>{
                                         type="password"
                                         name="password"
                                         placeholder="enter your password"
-                                        id="password" 
+                                        id="password"
                                         required
-                                        autoComplete="off" 
-                                        value={user.password}
-                                        onChange={handleInput}   
+                                        autoComplete="off"
+                                        value={driver.password}
+                                        onChange={handleInput}
                                     />
                                 </div>
 
@@ -108,6 +108,9 @@ export const Login = () =>{
                                 <button type="submit" className="btn btn-submit text-white">
                                     Login
                                 </button>
+                                <div>
+                                    <NavLink to="/login/userlogin">login as user</NavLink>
+                                </div>
                             </form>
                         </div>
                     </div>
