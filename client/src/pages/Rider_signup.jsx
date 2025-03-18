@@ -140,7 +140,7 @@ export const RiderSignup = () =>{
                                         onChange={handleInput}   
                                     />
                                 </div>
-
+                             
 
                                 <br />
 

@@ -1,7 +1,24 @@
+import { useState } from "react";
+
 import { Analytics } from "../components/Analytics";
 
+
+import LocationAutocomplete from "../components/LocationAutocomplete";   // location autocomplete goqapi code is in this file
+
+
 export const Home = () => {
+
+  //for location autocomplete
+  const [selectedLocation, setSelectedLocation] = useState(null);
+
+  const handleLocationSelect = (location) => {
+    setSelectedLocation(location);
+    console.log("Selected Location: ", location);
+  };
+
   return (
+
+
     <>
       <main>
         <section className="section-hero bg-white text-black">
@@ -18,14 +35,15 @@ export const Home = () => {
                     <div className="flex flex-row gap-7 items-center ">
                       <div className="bg-green-500 rounded-full w-5 h-5 "></div>
                       <div className="flex flex-row justify-between w-full  items-center bg-gray-200 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500  ">
-                        <input
+                        <LocationAutocomplete className="w-full h-20  bg-gray-200  rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500" onSelect={handleLocationSelect} />
+                        {/* <input
                           type="text"
                           placeholder="Enter pickup location"
                           className="w-full h-20  bg-gray-200  rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
-                        />
+                        /> */}
                         <img src="/src/assets/send.svg" className="h-10 w-10 pr-5 " alt="send svg" />
                       </div>
-
+                     
                     </div>
 
                     <div className="flex  flex-row items-center gap-7 justify-between  ">
@@ -49,9 +67,9 @@ export const Home = () => {
                       />
                     </div>
 
-                   
-                      <button className="text-white btn w-full pl-12" type="button">see prices</button>
-                 
+
+                    <button className="text-white btn w-full pl-12" type="button">see prices</button>
+
                   </div>
 
                 </div>

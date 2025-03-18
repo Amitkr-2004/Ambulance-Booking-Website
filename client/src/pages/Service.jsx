@@ -36,7 +36,7 @@ export const Service = () => {
                 <img src="/images/real time location tracking.jpg" alt="" className="imagee w-2xl" />
             </div>
             <div className="servces flex flex-row justify-center gap-150 items-center h-110 p-4 rounded-4xl bg-gray-100">
-                <img src="public/images/payment.jpg" alt="" className="imagee w-2xl" />
+                <img src="public/images/partner with us.jpg" alt="" className="imagee w-2xl" />
                 <div className="text flex flex-col gap-10 w-3xl p-10 bg-gray-100 rounded-4xl">
                     <div className="servicename text-5xl font-bold ">  Partner with Us</div>
                     <div className="text-4xl p-20">Seamlessly complete your booking with a variety of secure payment options. Our platform supports credit/debit cards, digital wallets, and other convenient methods, ensuring a hassle-free transaction experience.
