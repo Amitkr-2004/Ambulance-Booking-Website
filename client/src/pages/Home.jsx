@@ -34,10 +34,9 @@ export const Home = () => {
                   <div className="flex flex-col  justify-center gap-10">
                     <div className="flex flex-row gap-7 items-center ">
                       <div className="bg-green-500 rounded-full w-5 h-5 "></div>
-                      <div className="flex flex-row justify-between w-full  items-center bg-gray-200 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500  ">
+                      <div className="flex flex-row justify-between w-full  items-center  rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500  ">
                         <LocationAutocomplete className="w-full h-20  bg-gray-200  rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500" onSelect={handleLocationSelect} />
-    
-                    <img src="/src/assets/send.svg" className="h-10 w-10 pr-5 " alt="send svg" />
+  
                       </div>
                      
                     </div>
