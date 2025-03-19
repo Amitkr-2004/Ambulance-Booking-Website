@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
+import AutoDetectLocation from './AutoDetectLocation'; // Import the AutoDetectLocation component
 
 const LocationAutocomplete = ({ onSelect }) => {
   const [query, setQuery] = useState("");
@@ -21,7 +22,7 @@ const LocationAutocomplete = ({ onSelect }) => {
 
     try {
       const response = await fetch(
-           `https://maps.gomaps.pro/maps/api/place/autocomplete/json?input=${query}&key=${apiKey}`
+        `https://maps.gomaps.pro/maps/api/place/autocomplete/json?input=${query}&key=${apiKey}`
 
       );
 
@@ -44,6 +45,12 @@ const LocationAutocomplete = ({ onSelect }) => {
     const value = e.target.value;
     setQuery(value);
     fetchSuggestions(value);
+  };
+
+  // Handle location detection
+  const handleLocationDetected = (address) => {
+    setQuery(address); // Update the input field with the detected address
+    setSuggestions([]); // Clear suggestions
   };
 
   // Handle suggestion click
@@ -69,19 +76,22 @@ const LocationAutocomplete = ({ onSelect }) => {
 
   return (
     <div className="relative w-full" ref={dropdownRef}>
-      <input
-        type="text"
-        value={query}
-        onChange={handleInputChange}
-        placeholder="Enter location"
-        className="px-4 py-2  w-full h-20  bg-gray-200  rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
-      />
+      <div className="flex flex-row gap-7 items-center">
+        <input
+          type="text"
+          value={query}
+          onChange={handleInputChange}
+          placeholder="Enter location"
+          className="px-4 py-2 w-full h-20 bg-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
+        />
+        <AutoDetectLocation onLocationDetected={handleLocationDetected} />
+      </div>
 
       {loading && <p className="mt-2 text-gray-600">Loading...</p>}
       {error && <p className="mt-2 text-red-600">{error}</p>}
 
       {suggestions.length > 0 && (
-        <ul className="absolute z-10  mt-2 bg-white border border-gray-300 rounded-lg shadow-lg flex flex-col">
+        <ul className="absolute z-10 mt-2 bg-white border border-gray-300 rounded-lg shadow-lg flex flex-col">
           {suggestions.map((suggestion) => (
             <li
               key={suggestion.place_id} // Adjust based on API response structure
