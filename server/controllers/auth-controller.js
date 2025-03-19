@@ -23,7 +23,7 @@ const registerUser = async (req, res) => {
         const {username, email, phone, password, city} = req.body;
         const userExist = await User.findOne({email: email});
         if(userExist){
-            return res.status(400).json({msg: "email already exists"});
+            return res.status(400).json({message: "email already exists"});
         }
         const userCreated = await User.create({
             username,
@@ -55,7 +55,7 @@ const registerDriver = async (req, res) => {
         const {username, email, phone, password, city, vehicleNo} = req.body;
         const userExist = await Driver.findOne({email: email});
         if(userExist){
-            return res.status(400).json({msg: "email already exists"});
+            return res.status(400).json({message: "email already exists"});
         }
         const userCreated = await Driver.create({
             username,
@@ -88,7 +88,7 @@ const loginUser = async (req, res) =>{
         const {email, password} = req.body;
         const userExists = await User.findOne({email});
         if(!userExists){
-            res.status(400).send("Invalid Credientials");
+            return res.status(400).send({message: "Invalid Credientials"});
         }
         
         // const user = await bcrypt.compare(password, userExists.password);
@@ -103,11 +103,11 @@ const loginUser = async (req, res) =>{
             });
         }
         else{
-            res.status(401).send({msg: "Invalid email or Password"});
+            res.status(401).send({message: "Invalid email or Password"});
         }
     }
     catch{
-        res.status(500).send("internal Server Error");
+        res.status(500).send({message: "internal Server Error"});
     }
 }
 
@@ -121,7 +121,7 @@ const loginDriver = async (req, res) =>{
         const {email, password} = req.body;
         const userExists = await Driver.findOne({email});
         if(!userExists){
-            res.status(400).send("Invalid Credientials");
+            return res.status(400).send({message: "Invalid Credientials"});
         }
         
         // const user = await bcrypt.compare(password, userExists.password);
@@ -136,11 +136,11 @@ const loginDriver = async (req, res) =>{
             });
         }
         else{
-            res.status(401).send({msg: "Invalid email or Password"});
+            res.status(401).send({message: "Invalid email or Password"});
         }
     }
     catch{
-        res.status(500).send("internal Server Error");
+        res.status(500).send({message:"internal Server Error"});
     }
 }
 
