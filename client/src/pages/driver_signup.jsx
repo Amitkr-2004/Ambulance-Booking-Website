@@ -10,6 +10,7 @@ export const DriverSignup = () =>{
         phone: "",
         password: "",
         vehicle_No: "",
+        city: "",
     });
 
     const navigate = useNavigate();
@@ -49,7 +50,7 @@ export const DriverSignup = () =>{
                 storeTokenInLS(res_data.token);
                 // localStorage.setItem("token", res_data.token); //edit-->we used funciton instead in store folder>>context API
 
-                setUser({username: "",email: "",phone: "",password: "", vehicle_No: "",});
+                setUser({username: "",email: "",phone: "",password: "", vehicle_No: "",city:"",});
                 toast.success("Registration successful");
                 navigate("/"); //after signup redirect to login
             }else{
@@ -151,6 +152,18 @@ export const DriverSignup = () =>{
                                         required
                                         autoComplete="off" 
                                         value={user.vehicle_No}
+                                        onChange={handleInput}   
+                                    />
+                                </div>
+                                <div>
+                                    <label htmlFor="city">city</label>
+                                    <input
+                                        name="city"
+                                        placeholder="enter your  city"
+                                        id="city" 
+                                        required
+                                        autoComplete="off" 
+                                        value={user.city}
                                         onChange={handleInput}   
                                     />
                                 </div>
