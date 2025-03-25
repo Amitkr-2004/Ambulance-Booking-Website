@@ -1,16 +1,15 @@
 import React, { useState, useRef, useEffect } from "react";
-import AutoDetectLocation from './AutoDetectLocation'; // Import the AutoDetectLocation component
+import AutoDetectLocation from './AutoDetectLocation';
 
 const LocationAutocomplete = ({ onSelect }) => {
   const [query, setQuery] = useState("");
   const [suggestions, setSuggestions] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
-  const dropdownRef = useRef(null); // Ref for the dropdown
+  const dropdownRef = useRef(null);
 
-  const apiKey = "AlzaSylTxa9adxXYjFT3tZEdMWikrlma1oXmjts"; // Replace with your API key
+  const apiKey = "AlzaSyEdpPdwTcPvcaNtMzDO7qj_Vdi4ppipcsJ";
 
-  // Fetch suggestions from the API
   const fetchSuggestions = async (query) => {
     if (!query) {
       setSuggestions([]);
@@ -23,7 +22,6 @@ const LocationAutocomplete = ({ onSelect }) => {
     try {
       const response = await fetch(
         `https://maps.gomaps.pro/maps/api/place/autocomplete/json?input=${query}&key=${apiKey}`
-
       );
 
       if (!response.ok) {
@@ -31,7 +29,7 @@ const LocationAutocomplete = ({ onSelect }) => {
       }
 
       const data = await response.json();
-      setSuggestions(data.predictions || []); // Adjust based on API response structure
+      setSuggestions(data.predictions || []);
     } catch (error) {
       console.error("Error fetching suggestions:", error);
       setError("Failed to fetch suggestions. Please try again.");
@@ -40,31 +38,29 @@ const LocationAutocomplete = ({ onSelect }) => {
     }
   };
 
-  // Handle input change
   const handleInputChange = (e) => {
     const value = e.target.value;
     setQuery(value);
     fetchSuggestions(value);
   };
 
-  // Handle location detection
   const handleLocationDetected = (address) => {
-    setQuery(address); // Update the input field with the detected address
-    setSuggestions([]); // Clear suggestions
+    setQuery(address);
+    setSuggestions([]);
+    // Call onSelect with the address string
+    onSelect(address);
   };
 
-  // Handle suggestion click
   const handleSuggestionClick = (suggestion) => {
-    setQuery(suggestion.description); // Adjust based on API response structure
-    setSuggestions([]); // Clear suggestions
-    onSelect(suggestion); // Pass selected location data to parent component
+    setQuery(suggestion.description);
+    setSuggestions([]);
+    onSelect(suggestion);
   };
 
-  // Close dropdown when clicking outside
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
-        setSuggestions([]); // Clear suggestions
+        setSuggestions([]);
       }
     };
 
@@ -94,11 +90,11 @@ const LocationAutocomplete = ({ onSelect }) => {
         <ul className="absolute z-10 mt-2 bg-white border border-gray-300 rounded-lg shadow-lg flex flex-col">
           {suggestions.map((suggestion) => (
             <li
-              key={suggestion.place_id} // Adjust based on API response structure
+              key={suggestion.place_id}
               onClick={() => handleSuggestionClick(suggestion)}
               className="px-4 py-2 cursor-pointer hover:bg-gray-100"
             >
-              {suggestion.description} {/* Adjust based on API response structure */}
+              {suggestion.description}
             </li>
           ))}
         </ul>
