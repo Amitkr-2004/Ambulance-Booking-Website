@@ -1,8 +1,13 @@
 import React, { useState, useRef, useEffect } from "react";
 import AutoDetectLocation from './AutoDetectLocation';
+import { useAuth } from "../store/auth"; // Import the auth context
 
-const LocationAutocomplete = ({ onSelect }) => {
-  const [query, setQuery] = useState("");
+const LocationAutocomplete = ({ onSelect, value }) => {
+
+  // Get location state from context
+  const { setLocationState } = useAuth();
+  
+  const [query, setQuery] = useState(value || "");
   const [suggestions, setSuggestions] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
@@ -10,6 +15,7 @@ const LocationAutocomplete = ({ onSelect }) => {
 
   const apiKey = "AlzaSyEdpPdwTcPvcaNtMzDO7qj_Vdi4ppipcsJ";
 
+  // Fetch location suggestions from API
   const fetchSuggestions = async (query) => {
     if (!query) {
       setSuggestions([]);
@@ -38,25 +44,39 @@ const LocationAutocomplete = ({ onSelect }) => {
     }
   };
 
+  // Handle input change
   const handleInputChange = (e) => {
     const value = e.target.value;
     setQuery(value);
     fetchSuggestions(value);
   };
 
+  // Handle when location is detected via auto-detect
   const handleLocationDetected = (address) => {
     setQuery(address);
     setSuggestions([]);
-    // Call onSelect with the address string
-    onSelect(address);
+    const locationObj = { description: address, place_id: Date.now().toString() };
+    onSelect(locationObj);
+    // Update context state
+    setLocationState(prev => ({
+      ...prev,
+      pickup: locationObj
+    }));
   };
 
+  // Handle when a suggestion is selected
   const handleSuggestionClick = (suggestion) => {
     setQuery(suggestion.description);
     setSuggestions([]);
     onSelect(suggestion);
+    // Update context state
+    setLocationState(prev => ({
+      ...prev,
+      pickup: suggestion
+    }));
   };
 
+  // Close dropdown when clicking outside
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
@@ -69,6 +89,13 @@ const LocationAutocomplete = ({ onSelect }) => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, []);
+
+  // Update query when value prop changes
+  useEffect(() => {
+    if (value) {
+      setQuery(value);
+    }
+  }, [value]);
 
   return (
     <div className="relative w-full" ref={dropdownRef}>
