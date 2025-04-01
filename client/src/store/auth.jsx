@@ -19,14 +19,18 @@ export const AuthProvider = ({children}) =>{
     const [locationState, setLocationState] = useState({
         pickup: null,
         dropoffCity: "",
-        dropoffHospital: ""
+        dropoffHospital: "",
+        pickupid: null,
+        dropoffHospitalid: null
     });
     // NEW: Clear location state
     const clearLocationState = () => {
         setLocationState({
             pickup: null,
             dropoffCity: "",
-            dropoffHospital: ""
+            dropoffHospital: "",
+            pickupid: null,
+        dropoffHospitalid: null
         });
     };
 
