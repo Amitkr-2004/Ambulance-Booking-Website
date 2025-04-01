@@ -50,6 +50,8 @@ export const Home = () => {
 
   // Handle navigation to See Prices page
   const handleSeePrices = () => {
+    //token validation
+    
     // Validate inputs
     if (!pickup) {
       setError("Please enter pickup location");
@@ -66,7 +68,7 @@ export const Home = () => {
         pickup: pickup.description || pickup,
         drop:  dropoffHospital
       } 
-    });    
+    });
   };
 
   return (
