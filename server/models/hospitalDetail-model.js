@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 
 const hospitalSchema = new mongoose.Schema({
-    place_id: {
+    mainText: {
         type: String,
         required: true,
     },
@@ -9,7 +9,7 @@ const hospitalSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
-    hospitalName:{
+    commonName:{
         type: String,
         required: true,
     },
