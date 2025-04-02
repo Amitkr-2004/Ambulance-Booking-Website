@@ -144,5 +144,20 @@ const loginDriver = async (req, res) =>{
     }
 }
 
+//*---------------------------------
+// to send user data - User Logic
+//*---------------------------------
 
-module.exports = { home, registerUser, loginUser, registerDriver, loginDriver};
+const user = async (req, res) =>{
+    try {
+        const userData = req.user;
+        // console.log(userData);
+        // res.status(200).json({msg : "hi user"});
+        res.status(200).json({msg: userData});
+
+    } catch (error) {
+        console.log(`error from the user route  ${error}`);
+    }
+}
+
+module.exports = { home, registerUser, loginUser, registerDriver, loginDriver, user};

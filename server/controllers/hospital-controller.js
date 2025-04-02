@@ -21,7 +21,7 @@ const hospitalForm = async(req, res) =>{
 
 const hospitalInfo = async(req, res) =>{
     try{
-        const city = "patna";
+        const city = "bihta";
         // console.log("hi1");
         const hospitalData = await Hospital.find({city});
         return res.status(200).send(hospitalData);
