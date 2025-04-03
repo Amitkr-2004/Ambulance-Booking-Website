@@ -16,7 +16,7 @@ const hospitalForm = async(req, res) =>{
 }
 
 //*-----------------------------
-// hospital data fetcing Logic
+// all hospital data fetcing Logic as per city
 //*-----------------------------
 
 const hospitalInfo = async(req, res) =>{
@@ -30,4 +30,26 @@ const hospitalInfo = async(req, res) =>{
     }
 }
 
-module.exports = {hospitalForm, hospitalInfo};
+//*-----------------------------
+// Unique cities data fetcing Logic
+//*-----------------------------
+
+
+const getUniqueCities = async(req,res) =>{
+    try {
+        const cities = await Hospital.distinct('city');
+        res.status(200).json({
+            success: true,
+            count: cities.length,
+            data: cities.sort() // Sort alphabetically
+        });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({
+            success: false,
+            message: 'Server error while fetching cities'
+        });
+    }
+};
+
+module.exports = {hospitalForm, hospitalInfo, getUniqueCities};
