@@ -8,13 +8,16 @@ const validate = (schema) => async (req,res,next) =>{
         // cout<<"hi";
         // console.log(err);
         const message = err.errors[0].message;
+        const extraDetails = err.errors[0].message;
+        console.log(err);
         // res.status(400).send({msg: message});
         const status = 422;
         const error = {
             status,
             message,
+            extraDetails,
         }
-        console.log(error);
+        // console.log(error);
         next(error);
     }
 }

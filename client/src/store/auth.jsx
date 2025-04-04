@@ -69,6 +69,7 @@ export const AuthProvider = ({ children }) => {
             if (response.ok) {
                 const data = await response.json();
                 console.log("user data", data.userData);
+                // console.log("user token", data.token);
                 // console.log(user);
                 setUser(data.userData);
                 setIsLoading(false);//such that admin path will be bloked for non admin user

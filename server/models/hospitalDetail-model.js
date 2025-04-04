@@ -1,11 +1,15 @@
 const mongoose = require("mongoose");
 
 const hospitalSchema = new mongoose.Schema({
+    mainText: {
+        type: String,
+        required: true,
+    },
     city: {
         type: String,
         required: true,
     },
-    hospitalName:{
+    commonName:{
         type: String,
         required: true,
     },

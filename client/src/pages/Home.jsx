@@ -4,13 +4,22 @@ import { Analytics } from "../components/Analytics";
 import LocationAutocomplete from "../components/LocationAutocomplete";
 import { useAuth } from "../store/auth"; // Import the auth context
 
+
 export const Home = () => {
   // Get location state and updater function from auth context
+<<<<<<< HEAD
   const { locationState, setLocationState } = useAuth();
   const { pickup, dropoffCity, dropoffHospital, latlong_pickup, latlong_drop } = locationState;
   const [error, setError] = useState("");
   const navigate = useNavigate();
   const errorRef = useRef(null);
+=======
+  const { locationState, setLocationState, isLoggedIn } = useAuth();
+    const { pickup, dropoffCity, dropoffHospital } = locationState;
+    const [error, setError] = useState("");
+    const navigate = useNavigate();
+    const errorRef = useRef(null);
+>>>>>>> 3b747acfd21a11d448adddc60a83b9fa2a90c3b9
 
   // Clear error when locations are updated
   useEffect(() => {
@@ -110,6 +119,16 @@ export const Home = () => {
   // Handle navigation to See Prices page
   const handleSeePrices = () => {
     //token validation
+<<<<<<< HEAD
+=======
+    // console.log(authorizationToken);
+    // console.log("hi");
+    if (!isLoggedIn) {
+      navigate('/register');
+      return;
+    }
+
+>>>>>>> 3b747acfd21a11d448adddc60a83b9fa2a90c3b9
 
     // Validate inputs
     if (!pickup) {
