@@ -147,12 +147,37 @@ export const Home = () => {
     });
   };
 
-  // fetch hospitals by  city from backend / databases.
+  // // fetch hospitals by  city from backend / databases.
   
-  const [hospitals, sethospitals] = useState([])
-  const [loading, setLoading] = useState(false);
-  // Function to fetch hospitals by city
- 
+  // const [hospitals, sethospitals] = useState([])
+  // const [loading, setLoading] = useState(false);
+  // // Function to fetch hospitals by city
+  // const fetchHospitalsByCity = async () => {
+  //   if (dropoffCity === "") return;
+
+  //   setLoading(true);
+  //   try {
+  //     console.log("Fetching hospitals for city:", dropoffCity);
+  //     const response = await fetch('http://localhost:5000/api/hospital/fetchHostitalInfo?city=${dropoffCity}');
+
+  //     // First check if the response is OK (status 200-299)
+  //     if (!response.ok) {
+  //       const errorText = await response.text();
+  //       throw new Error(`Server responded with ${response.status}: ${errorText}`);
+  //     }
+
+  //     const data = await response.json();
+  //     sethospitals(data);
+  //     console.log("fetched hospitals from city", data); // Log the actual response data
+  //   } catch (error) {
+  //     console.error("Error fetching hospitals:", error);
+  //     // Optional: Set some error state to display to user
+  //     sethospitals
+  //     ([]); // Clear previous results on error
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // };
 
   
   // Handle when a city suggestion is selected
@@ -213,7 +238,8 @@ export const Home = () => {
                         value={dropoffCity?.description || ""}
                       />
 
-                      <button className="text-white" type="button" onClick={fetchHospitalsByCity}>Search Hospitals</button>
+                      {/* <button className="text-white" type="button" onClick={fetchHospitalsByCity}>Search Hospitals</button> */}
+                      <button className="text-white" type="button" >Search Hospitals</button>
                     </div>
 
 
@@ -230,7 +256,7 @@ export const Home = () => {
                           dropoffHospital: e.target.value
                         }))}
                       />
-                      {loading && (
+                      {/* {loading && (
                         <div className="absolute z-10 mt-1 w-full bg-white border border-gray-300 rounded-lg shadow-lg">
                           <div className="p-2 text-gray-500">Loading Hospitals...</div>
                         </div>
@@ -247,7 +273,7 @@ export const Home = () => {
                             </li>
                           ))}
                         </ul>
-                      )}
+                      )} */}
                     </div>
 
                     {/* See Prices Button */}
