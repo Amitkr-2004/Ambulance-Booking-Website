@@ -19,16 +19,20 @@ const hospitalForm = async(req, res) =>{
 // all hospital data fetcing Logic as per city
 //*-----------------------------
 
-const hospitalInfo = async(req, res) =>{
-    try{
-        const city = "bihta";
-        // console.log("hi1");
-        const hospitalData = await Hospital.find({city});
-        return res.status(200).send(hospitalData);
-    }catch(error){
-        return res.status(500).send({msg: "error in fetching data"});
+const hospitalInfo = async (req, res) => {
+    try {
+        const city = req.query.city; // Get city from query parameter (?city=...)
+        console.log(city);
+        if (!city) {
+            return res.status(400).json({ msg: "City parameter is required" });
+        }
+
+        const hospitalData = await Hospital.find({ city });
+        return res.status(200).json(hospitalData);
+    } catch (error) {
+        return res.status(500).json({ msg: "Error in fetching data" });
     }
-}
+};
 
 //*-----------------------------
 // Unique cities data fetcing Logic
