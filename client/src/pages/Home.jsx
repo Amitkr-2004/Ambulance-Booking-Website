@@ -2,24 +2,18 @@ import { useState, useEffect, useRef } from "react";
 import { useNavigate } from 'react-router-dom';
 import { Analytics } from "../components/Analytics";
 import LocationAutocomplete from "../components/LocationAutocomplete";
+import CityAutocomplete from "../components/CityAutocomplete";
 import { useAuth } from "../store/auth"; // Import the auth context
 
 
 export const Home = () => {
   // Get location state and updater function from auth context
-<<<<<<< HEAD
-  const { locationState, setLocationState } = useAuth();
+
+  const { locationState, setLocationState, isLoggedIn } = useAuth();
   const { pickup, dropoffCity, dropoffHospital, latlong_pickup, latlong_drop } = locationState;
   const [error, setError] = useState("");
   const navigate = useNavigate();
   const errorRef = useRef(null);
-=======
-  const { locationState, setLocationState, isLoggedIn } = useAuth();
-    const { pickup, dropoffCity, dropoffHospital } = locationState;
-    const [error, setError] = useState("");
-    const navigate = useNavigate();
-    const errorRef = useRef(null);
->>>>>>> 3b747acfd21a11d448adddc60a83b9fa2a90c3b9
 
   // Clear error when locations are updated
   useEffect(() => {
@@ -43,12 +37,12 @@ export const Home = () => {
   }, [error]);
 
 
-  
+
   //whenever pickup and dropoffhospital changes , update the latlong_pickup and latlong_drop.
 
   useEffect(() => {
     const apiKey = import.meta.env.VITE_GOOGLE_MAPS_API_KEY;
-    
+
     const fetchlatlong = async (address) => {
       console.log('Fetching latlong for:', address);
       if (!address || typeof address !== 'string') return null;
@@ -56,11 +50,11 @@ export const Home = () => {
       try {
         const url = `https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURIComponent(address)}&key=${apiKey}`;
         // console.log('API Request:', url);
-  
+
         const response = await fetch(url);
         const data = await response.json();
         console.log('API Response:', data);
-  
+
         // if (data.status === 'ZERO_RESULTS') {
         //   console.warn('No results found for:', address);
         //   return null;
@@ -68,7 +62,7 @@ export const Home = () => {
         if (data.results && data.results.length > 0) {
           const latlong = data.results[0].geometry.location;
           return latlong; // Return the latlong object
-        }else {
+        } else {
           setError('Unable to fetch latlong');
         }
       } catch (error) {
@@ -78,6 +72,7 @@ export const Home = () => {
     }
     // Fetch and update pickup coords
     const updatePickup = async () => {
+      if (!pickup) return;
       const coords = await fetchlatlong(pickup.description || pickup);
       setLocationState(prev => ({
         ...prev,
@@ -87,6 +82,7 @@ export const Home = () => {
 
     // Fetch and update dropoff coords
     const updateDropoff = async () => {
+      if (!dropoffHospital) return;
       const coords = await fetchlatlong(dropoffHospital);
       setLocationState(prev => ({
         ...prev,
@@ -111,25 +107,27 @@ export const Home = () => {
       ...prev,
       pickup: locationObj
     }));
-
-  };
-
-
-
+  }
+  // handle city selection
+  const handlecityselect = (city) => {
+    const cityObj = typeof city === 'string'
+      ? { description: city, place_id: Date.now().toString() }
+      : city;
+    //update context state
+    setLocationState(prev => ({
+      ...prev,
+      dropoffCity: cityObj
+    }));
+  }
   // Handle navigation to See Prices page
   const handleSeePrices = () => {
     //token validation
-<<<<<<< HEAD
-=======
     // console.log(authorizationToken);
     // console.log("hi");
     if (!isLoggedIn) {
       navigate('/register');
       return;
     }
-
->>>>>>> 3b747acfd21a11d448adddc60a83b9fa2a90c3b9
-
     // Validate inputs
     if (!pickup) {
       setError("Please enter pickup location");
@@ -144,10 +142,31 @@ export const Home = () => {
     navigate('/home/seeprices', {
       state: {
         pickup: pickup.description || pickup,
-        drop:  dropoffHospital
+        drop: dropoffHospital
       }
     });
   };
+
+  // fetch hospitals by  city from backend / databases.
+  
+  const [hospitals, sethospitals] = useState([])
+  const [loading, setLoading] = useState(false);
+  // Function to fetch hospitals by city
+ 
+
+  
+  // Handle when a city suggestion is selected
+  const handleSuggestionClick = (hospital) => {
+    sethospitals([])
+    const hospitalobj = { hospital };
+    onSelect(hospitalobj);
+    // Update context state
+    setLocationState(prev => ({
+      ...prev,
+      dropoffHospital: hospital
+    }));
+  };
+
 
   return (
     <>
@@ -189,21 +208,14 @@ export const Home = () => {
 
                     {/* Dropoff City Input */}
                     <div className="flex flex-row items-center gap-7 justify-between">
-                      <div className="flex w-full flex-row gap-7 items-center space-x-3">
-                        <div className="bg-blue-400 rounded-full w-5 h-5"></div>
-                        <input
-                          type="text"
-                          placeholder="Enter dropoff city"
-                          className="w-full h-20 border bg-gray-200 border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
-                          value={dropoffCity}
-                          onChange={(e) => setLocationState(prev => ({
-                            ...prev,
-                            dropoffCity: e.target.value
-                          }))}
-                        />
-                      </div>
-                      <button className="text-white" type="button">Search Hospitals</button>
+                      <CityAutocomplete className="w-full h-20 bg-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        onSelect={handlecityselect}
+                        value={dropoffCity?.description || ""}
+                      />
+
+                      <button className="text-white" type="button" onClick={fetchHospitalsByCity}>Search Hospitals</button>
                     </div>
+
 
                     {/* Dropoff Hospital Input */}
                     <div className="flex w-full flex-row gap-7 items-center space-x-3">
@@ -218,6 +230,24 @@ export const Home = () => {
                           dropoffHospital: e.target.value
                         }))}
                       />
+                      {loading && (
+                        <div className="absolute z-10 mt-1 w-full bg-white border border-gray-300 rounded-lg shadow-lg">
+                          <div className="p-2 text-gray-500">Loading Hospitals...</div>
+                        </div>
+                      )}
+                      {!loading && hospitals.length > 0 && (
+                        <ul className=" absolute z-10 mt-2 bg-white border border-gray-300 rounded-lg shadow-lg flex flex-col w-full">
+                          {hospitals.map((hospital, index) => (
+                            <li
+                              key={index}
+                              onClick={() => handleSuggestionClick(hospital)}
+                              className="px-4 py-2 cursor-pointer hover:bg-blue-100"
+                            >
+                              {hospital}
+                            </li>
+                          ))}
+                        </ul>
+                      )}
                     </div>
 
                     {/* See Prices Button */}
