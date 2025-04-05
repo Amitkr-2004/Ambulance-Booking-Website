@@ -119,6 +119,19 @@ export const Home = () => {
       dropoffCity: cityObj
     }));
   }
+
+  // Handle when a hospital suggestion is selected
+  const handleHospitalSelect = (hospital) => {
+    setHospitals([])
+    const hospitalObj = { hospital };
+    onSelect(hospitalObj);
+    // Update context state
+    setLocationState(prev => ({
+      ...prev,
+      dropoffHospital: hospital
+    }));
+  };
+
   // Handle navigation to See Prices page
   const handleSeePrices = () => {
     //token validation
@@ -147,42 +160,41 @@ export const Home = () => {
     });
   };
 
-  // // fetch hospitals by  city from backend / databases.
-  
-  // const [hospitals, sethospitals] = useState([])
-  // const [loading, setLoading] = useState(false);
-  // // Function to fetch hospitals by city
-  // const fetchHospitalsByCity = async () => {
-  //   if (dropoffCity === "") return;
+  // fetch hospitals by  city from backend / databases.
 
-  //   setLoading(true);
-  //   try {
-  //     console.log("Fetching hospitals for city:", dropoffCity);
-  //     const response = await fetch('http://localhost:5000/api/hospital/fetchHostitalInfo?city=${dropoffCity}');
+  const [loading, setLoading] = useState(false);
+  // Function to fetch hospitals by city
 
-  //     // First check if the response is OK (status 200-299)
-  //     if (!response.ok) {
-  //       const errorText = await response.text();
-  //       throw new Error(`Server responded with ${response.status}: ${errorText}`);
-  //     }
+  const [hospitals, setHospitals] = useState([]);
 
-  //     const data = await response.json();
-  //     sethospitals(data);
-  //     console.log("fetched hospitals from city", data); // Log the actual response data
-  //   } catch (error) {
-  //     console.error("Error fetching hospitals:", error);
-  //     // Optional: Set some error state to display to user
-  //     sethospitals
-  //     ([]); // Clear previous results on error
-  //   } finally {
-  //     setLoading(false);
-  //   }
-  // };
+  // Function to fetch hospitals by city
+  const fetchHospitalsByCity = async () => {
 
-  
-  // Handle when a city suggestion is selected
+    try {
+      const response = await fetch(`http://localhost:5000/api/hospital/fetchHostitalInfo?city=${dropoffCity}`);
+
+      setLoading(true); // Set loading state to true
+      // First check if the response is OK (status 200-299)
+      if (!response.ok) {
+        const errorText = await response.text();
+        throw new Error(`Server responded with ${response.status}: ${errorText}`);
+      }
+      const data = await response.json();
+
+
+      setHospitals(data);
+      console.log("Received data:", data); // Log the actual response data
+    } catch (error) {
+      console.error("Error fetching hospitals:", error);
+    } finally {
+      setLoading(false); // Set loading state to false after fetching
+    }
+  };
+
+
+  //Handle when a city suggestion is selected
   const handleSuggestionClick = (hospital) => {
-    sethospitals([])
+    setHospitals([])
     const hospitalobj = { hospital };
     onSelect(hospitalobj);
     // Update context state
@@ -191,6 +203,22 @@ export const Home = () => {
       dropoffHospital: hospital
     }));
   };
+
+  const hospitalsDropdownRef = useRef(null);
+
+  // Add this useEffect hook near your other useEffect hooks
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (hospitalsDropdownRef.current && !hospitalsDropdownRef.current.contains(event.target)) {
+        setHospitals([]);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
 
 
   return (
@@ -239,42 +267,51 @@ export const Home = () => {
                       />
 
                       {/* <button className="text-white" type="button" onClick={fetchHospitalsByCity}>Search Hospitals</button> */}
-                      <button className="text-white" type="button" >Search Hospitals</button>
+                      <button className="text-white" type="button" onClick={fetchHospitalsByCity}>Search Hospitals</button>
                     </div>
 
 
-                    {/* Dropoff Hospital Input */}
-                    <div className="flex w-full flex-row gap-7 items-center space-x-3">
+                    {/* Dropoff Hospital Input - Modified structure */}
+                    <div className="relative flex w-full flex-row gap-7 items-center space-x-3">
                       <div className="bg-red-500 rounded-full w-5 h-5"></div>
-                      <input
-                        type="text"
-                        placeholder="Dropoff Hospital"
-                        className="w-full h-20 border bg-gray-200 border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500"
-                        value={dropoffHospital}
-                        onChange={(e) => setLocationState(prev => ({
-                          ...prev,
-                          dropoffHospital: e.target.value
-                        }))}
-                      />
-                      {/* {loading && (
-                        <div className="absolute z-10 mt-1 w-full bg-white border border-gray-300 rounded-lg shadow-lg">
-                          <div className="p-2 text-gray-500">Loading Hospitals...</div>
-                        </div>
-                      )}
-                      {!loading && hospitals.length > 0 && (
-                        <ul className=" absolute z-10 mt-2 bg-white border border-gray-300 rounded-lg shadow-lg flex flex-col w-full">
-                          {hospitals.map((hospital, index) => (
-                            <li
-                              key={index}
-                              onClick={() => handleSuggestionClick(hospital)}
-                              className="px-4 py-2 cursor-pointer hover:bg-blue-100"
-                            >
-                              {hospital}
-                            </li>
-                          ))}
-                        </ul>
-                      )} */}
+                      <div className="relative w-full" ref={hospitalsDropdownRef}>
+                        <input
+                          type="text"
+                          placeholder="Dropoff Hospital"
+                          className="w-full h-20 border bg-gray-200 border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500"
+                          value={dropoffHospital}
+                          onChange={(e) => setLocationState(prev => ({
+                            ...prev,
+                            dropoffHospital: e.target.value
+                          }))}
+                        />
+                        {loading && (
+                          <div className="absolute z-10 top-full left-0 right-0 bg-white border border-gray-300 rounded-lg shadow-lg mt-1">
+                            <div className="p-2 text-gray-500">Loading Hospitals...</div>
+                          </div>
+                        )}
+                        {!loading && hospitals.length > 0 && (
+                          <ul className="absolute z-10 mt-2 bg-white border border-gray-300 rounded-lg shadow-lg flex flex-col w-full">
+                            {hospitals.map((hospital, index) => (
+                              <li
+                                key={index}
+                                onClick={() => {
+                                  setLocationState(prev => ({
+                                    ...prev,
+                                    dropoffHospital: hospital.commonName
+                                  }));
+                                  setHospitals([]);
+                                }}
+                                className="px-4 py-2 cursor-pointer hover:bg-blue-100"
+                              >
+                                {hospital.commonName}
+                              </li>
+                            ))}
+                          </ul>
+                        )}
+                      </div>
                     </div>
+
 
                     {/* See Prices Button */}
                     <button
