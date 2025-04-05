@@ -114,29 +114,6 @@ export const Home = () => {
 
   };
 
-const [hospitals, setHospitals] = useState([]);
-
-// Function to fetch hospitals by city
-const fetchHospitalsByCity = async () => {
-  try {
-    const response = await fetch(`http://localhost:5000/api/hospital/fetchHostitalInfo?city=${dropoffCity}`);
-    
-    // First check if the response is OK (status 200-299)
-    if (!response.ok) {
-      const errorText = await response.text();
-      throw new Error(`Server responded with ${response.status}: ${errorText}`);
-    }
-    
-    const data = await response.json();
-    setHospitals(data);
-    console.log("Received data:", data); // Log the actual response data
-  } catch (error) {
-    console.error("Error fetching hospitals:", error);
-    // Optional: Set some error state to display to user
-    setHospitals([]); // Clear previous results on error
-  }
-};
-
   // Handle navigation to See Prices page
   const handleSeePrices = () => {
     //token validation
@@ -223,7 +200,7 @@ const fetchHospitalsByCity = async () => {
                           }))}
                         />
                       </div>
-                      <button className="text-white" type="button" onClick={fetchHospitalsByCity}>Search Hospitals</button>
+                      <button className="text-white" type="button">Search Hospitals</button>
                     </div>
 
                     {/* Dropoff Hospital Input */}
